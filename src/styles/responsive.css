@@ -1,0 +1,242 @@
+/* Спільні правила для всього застосунку */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 0;
+}
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.app-layout {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.app-layout .container {
+  width: min(1200px, calc(100% - 48px));
+  min-width: 0;
+}
+
+.app-layout .main-content {
+  min-width: 0;
+}
+
+.page {
+  overflow-wrap: anywhere;
+}
+
+.page h1 {
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.2;
+}
+
+.site-header .header-content {
+  flex-wrap: wrap;
+}
+
+.site-header .navigation {
+  min-width: 0;
+}
+
+.site-header .navigation a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+}
+
+/* Спільне оформлення входу, реєстрації та відновлення пароля */
+
+.login-screen .login-panel {
+  width: 100%;
+  max-width: 440px;
+  min-width: 0;
+  padding: 64px 24px 40px;
+}
+
+.login-screen .login-title {
+  font-size: 22px;
+  overflow-wrap: anywhere;
+}
+
+.login-screen .login-field,
+.login-screen .login-password {
+  min-width: 0;
+}
+
+.login-screen .login-field input {
+  min-width: 0;
+  height: 48px;
+  font-size: 16px;
+}
+
+.login-screen .login-eye {
+  width: 48px;
+  height: 48px;
+}
+
+.login-screen .login-password input {
+  padding-right: 52px;
+}
+
+.login-screen .login-button {
+  min-height: 48px;
+  font-size: 16px;
+}
+
+.login-screen .login-button svg {
+  flex-shrink: 0;
+}
+
+.login-screen .login-options {
+  column-gap: 16px;
+  row-gap: 4px;
+}
+
+.login-screen .login-remember {
+  min-height: 44px;
+}
+
+.login-screen .login-remember input {
+  flex-shrink: 0;
+}
+
+.login-screen .login-forgot {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.login-screen .login-register {
+  overflow-wrap: anywhere;
+}
+
+.login-screen .login-register a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.login-screen .login-error,
+.login-screen .login-notice {
+  overflow-wrap: anywhere;
+}
+
+.login-screen .register-heading {
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+}
+
+.login-screen .register-back {
+  width: 44px;
+  height: 44px;
+}
+
+.login-screen .register-terms .login-remember {
+  align-items: center;
+}
+
+.login-screen .register-terms input {
+  margin-top: 0;
+}
+
+/* Телефони */
+
+@media (max-width: 600px) {
+  .app-layout .container {
+    width: calc(100% - 32px);
+  }
+
+  .app-layout .main-content {
+    padding-block: 24px;
+  }
+
+  .site-header .header-content {
+    min-height: auto;
+    gap: 12px;
+    padding-block: 12px;
+  }
+
+  .site-header .navigation {
+    width: 100%;
+    gap: 4px;
+  }
+
+  .site-header .navigation a {
+    padding-inline: 10px;
+    font-size: 14px;
+  }
+
+  .app-layout .page {
+    padding: 20px;
+  }
+
+  .login-screen .login-panel {
+    max-width: 440px;
+    padding: 40px 16px 24px;
+  }
+
+  .login-screen .login-title {
+    font-size: 20px;
+  }
+
+  .login-screen .login-register {
+    padding-top: 32px;
+  }
+}
+
+/* Особливо вузькі екрани */
+
+@media (max-width: 360px) {
+  .login-screen .login-panel {
+    padding-inline: 12px;
+  }
+
+  .login-screen .register-heading {
+    column-gap: 4px;
+  }
+
+  .login-screen .register-heading .login-title {
+    font-size: 18px;
+  }
+
+  .login-screen .login-options {
+    font-size: 12px;
+    column-gap: 8px;
+  }
+}
+
+/* Невисокі вікна та горизонтальне положення телефона */
+
+@media (max-height: 600px) {
+  .login-screen .login-panel {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  .login-screen .login-register {
+    margin-top: 32px;
+    padding-top: 0;
+  }
+}

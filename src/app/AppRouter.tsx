@@ -4,6 +4,8 @@ import HomePage from '../pages/HomePage'
 import LoginPage from '../pages/LoginPage'
 import RegisterPage from '../pages/RegisterPage'
 import ForgotPasswordPage from '../pages/ForgotPasswordPage'
+import AdminPage from '../pages/AdminPage'
+import CreateMoviePage from '../pages/CreateMoviePage'
 
 export default function AppRouter() {
   return (
@@ -17,6 +19,17 @@ export default function AppRouter() {
 
       <Route element={<MainLayout />}>
         <Route index element={<HomePage />} />
+        <Route path="admin" element={<AdminPage />} />
+
+        <Route
+          path="admin/movies/new"
+          element={<CreateMoviePage />}
+        />
+
+        <Route
+          path="admin/movies/:id/edit"
+          element={<CreateMoviePage />}
+        />
 
         <Route
           path="*"

@@ -1,0 +1,105 @@
+.movie-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.movie-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.movie-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.movie-form-field label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.movie-form-field input,
+.movie-form-field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background: #fff;
+  color: #202020;
+  font: inherit;
+  font-size: 16px;
+}
+
+.movie-form-field input {
+  min-height: 48px;
+}
+
+.movie-form-field textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.movie-form-field [aria-invalid='true'] {
+  border-color: #b42318;
+}
+
+.movie-form-error {
+  margin: 0;
+  color: #b42318;
+  font-size: 13px;
+}
+
+.movie-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.movie-form-submit {
+  min-height: 48px;
+  padding: 12px 20px;
+  border: 1px solid #202020;
+  border-radius: 12px;
+  background: #202020;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.movie-form-submit:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.movie-form textarea:focus-visible {
+  outline: 3px solid #555;
+  outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .movie-form {
+    padding: 16px;
+  }
+
+  .movie-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .movie-form-actions {
+    flex-direction: column;
+  }
+
+  .movie-form-actions > * {
+    width: 100%;
+  }
+}
