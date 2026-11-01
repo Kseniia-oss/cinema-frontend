@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useFormik } from 'formik'
 import type { RegisterFormValues } from './auth.types'
 import { validateRegister } from './register.validation'
+import { registerUser } from './auth.api'
+import { getAuthErrorMessage } from './auth.errors'
 
 export function useRegisterForm() {
   const [showPassword, setShowPassword] = useState(false)
@@ -19,12 +21,24 @@ export function useRegisterForm() {
 
     validate: validateRegister,
 
-    onSubmit: (_values, helpers) => {
-      setNotice(
-        'Сервер реєстрації ще не підключений. Акаунт не створено.',
-      )
+    onSubmit: async (values, helpers) => {
+      setNotice('')
 
-      helpers.setSubmitting(false)
+      try {
+        await registerUser({
+          userName: values.name.trim(),
+          email: values.email.trim(),
+          password: values.password,
+        })
+
+        helpers.resetForm()
+
+        setNotice(
+          'Акаунт успішно створено на сервері. Можеш перейти на сторінку входу. Збереження сесії ще не підключене.',
+        )
+      } catch (error: unknown) {
+        setNotice(getAuthErrorMessage(error))
+      }
     },
   })
 

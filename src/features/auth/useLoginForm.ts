@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useFormik } from 'formik'
 import type { LoginFormValues } from './auth.types'
 import { validateLogin } from './auth.validation'
+import { loginUser } from './auth.api'
+import { getAuthErrorMessage } from './auth.errors'
 
 export function useLoginForm() {
   const [showPassword, setShowPassword] = useState(false)
@@ -9,6 +11,7 @@ export function useLoginForm() {
 
   const formik = useFormik<LoginFormValues>({
     initialValues: {
+      userName: '',
       email: '',
       password: '',
       rememberMe: false,
@@ -16,12 +19,24 @@ export function useLoginForm() {
 
     validate: validateLogin,
 
-    onSubmit: (_values, helpers) => {
-      setNotice(
-        'Сервер авторизації ще не підключений. Вхід не виконано.',
-      )
+    onSubmit: async (values, helpers) => {
+      setNotice('')
 
-      helpers.setSubmitting(false)
+      try {
+        const user = await loginUser({
+          userName: values.userName.trim(),
+          email: values.email.trim(),
+          password: values.password,
+        })
+
+        helpers.resetForm()
+
+        setNotice(
+          `Сервер підтвердив вхід користувача ${user.userName}. Збереження сесії ще не підключене.`,
+        )
+      } catch (error: unknown) {
+        setNotice(getAuthErrorMessage(error))
+      }
     },
   })
 

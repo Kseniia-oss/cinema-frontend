@@ -66,19 +66,22 @@ export default function RegisterPage() {
         <form
           className="login-form"
           onSubmit={formik.handleSubmit}
+          aria-busy={formik.isSubmitting}
           noValidate
         >
           <div className="login-field">
             <label className="login-sr-only" htmlFor="name">
-              Ім’я
+              Ім’я користувача
             </label>
 
             <input
               id="name"
               name="name"
               type="text"
-              autoComplete="name"
-              placeholder="Ім’я"
+              autoComplete="username"
+              autoCapitalize="none"
+              spellCheck={false}
+              placeholder="Ім’я користувача"
               required
               value={formik.values.name}
               onChange={formik.handleChange}
@@ -104,6 +107,8 @@ export default function RegisterPage() {
               name="email"
               type="email"
               autoComplete="email"
+              autoCapitalize="none"
+              spellCheck={false}
               placeholder="Електронна пошта"
               required
               value={formik.values.email}
@@ -172,7 +177,7 @@ export default function RegisterPage() {
             className="login-button login-button-primary"
             disabled={formik.isSubmitting}
           >
-            Створити
+            {formik.isSubmitting ? 'Створюємо…' : 'Створити'}
           </button>
         </form>
 
@@ -184,16 +189,15 @@ export default function RegisterPage() {
           type="button"
           className="login-button login-button-secondary"
           onClick={handleGoogleRegister}
+          disabled={formik.isSubmitting}
         >
           <GoogleIcon />
           <span>Створити через Google</span>
         </button>
 
-        {notice && (
-          <p className="login-notice" role="status">
-            {notice}
-          </p>
-        )}
+        <div role="status" aria-live="polite" aria-atomic="true">
+          {notice && <p className="login-notice">{notice}</p>}
+        </div>
       </div>
     </main>
   )

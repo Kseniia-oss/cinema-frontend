@@ -1,4 +1,5 @@
 import { Link } from 'react-router'
+import GoogleIcon from '../components/GoogleIcon'
 import { useLoginForm } from '../features/auth/useLoginForm'
 import './LoginPage.css'
 
@@ -10,6 +11,10 @@ export default function LoginPage() {
     handleGoogleLogin,
     notice,
   } = useLoginForm()
+
+  const userNameError = formik.touched.userName
+    ? formik.errors.userName
+    : undefined
 
   const emailError = formik.touched.email
     ? formik.errors.email
@@ -27,8 +32,43 @@ export default function LoginPage() {
         <form
           className="login-form"
           onSubmit={formik.handleSubmit}
+          aria-busy={formik.isSubmitting}
           noValidate
         >
+          <div className="login-field">
+            <label className="login-sr-only" htmlFor="userName">
+              Ім’я користувача
+            </label>
+
+            <input
+              id="userName"
+              name="userName"
+              type="text"
+              autoComplete="username"
+              autoCapitalize="none"
+              spellCheck={false}
+              placeholder="Ім’я користувача"
+              required
+              value={formik.values.userName}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              aria-invalid={Boolean(userNameError)}
+              aria-describedby={
+                userNameError ? 'username-error' : undefined
+              }
+            />
+
+            {userNameError && (
+              <p
+                id="username-error"
+                className="login-error"
+                role="alert"
+              >
+                {userNameError}
+              </p>
+            )}
+          </div>
+
           <div className="login-field">
             <label className="login-sr-only" htmlFor="email">
               Електронна пошта
@@ -39,6 +79,8 @@ export default function LoginPage() {
               name="email"
               type="email"
               autoComplete="email"
+              autoCapitalize="none"
+              spellCheck={false}
               placeholder="Електронна пошта"
               required
               value={formik.values.email}
@@ -118,9 +160,10 @@ export default function LoginPage() {
                 type="checkbox"
                 checked={formik.values.rememberMe}
                 onChange={formik.handleChange}
+                disabled
               />
 
-              <span>Запам’ятати мене</span>
+              <span>Запам’ятати мене (незабаром)</span>
             </label>
 
             <Link to="/forgot-password" className="login-forgot">
@@ -133,7 +176,7 @@ export default function LoginPage() {
             className="login-button login-button-primary"
             disabled={formik.isSubmitting}
           >
-            Увійти
+            {formik.isSubmitting ? 'Входимо…' : 'Увійти'}
           </button>
         </form>
 
@@ -146,31 +189,9 @@ export default function LoginPage() {
             type="button"
             className="login-button login-button-secondary"
             onClick={handleGoogleLogin}
+            disabled={formik.isSubmitting}
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                fill="#4285F4"
-                d="M21.6 12.23c0-.71-.06-1.39-.18-2.05H12v3.88h5.38a4.6 4.6 0 0 1-2 3.02v2.51h3.24c1.89-1.74 2.98-4.3 2.98-7.36Z"
-              />
-              <path
-                fill="#34A853"
-                d="M12 22c2.7 0 4.96-.9 6.62-2.41l-3.24-2.51c-.9.6-2.05.96-3.38.96-2.61 0-4.82-1.76-5.61-4.12H3.05v2.59A10 10 0 0 0 12 22Z"
-              />
-              <path
-                fill="#FBBC05"
-                d="M6.39 13.92a6 6 0 0 1 0-3.84V7.49H3.05a10 10 0 0 0 0 9.02l3.34-2.59Z"
-              />
-              <path
-                fill="#EA4335"
-                d="M12 5.96c1.47 0 2.79.51 3.83 1.51l2.87-2.87A9.6 9.6 0 0 0 12 2a10 10 0 0 0-8.95 5.49l3.34 2.59C7.18 7.72 9.39 5.96 12 5.96Z"
-              />
-            </svg>
-
+            <GoogleIcon />
             <span>Увійти через Google</span>
           </button>
 
@@ -182,11 +203,9 @@ export default function LoginPage() {
           </Link>
         </div>
 
-        {notice && (
-          <p className="login-notice" role="status">
-            {notice}
-          </p>
-        )}
+        <div role="status" aria-live="polite" aria-atomic="true">
+          {notice && <p className="login-notice">{notice}</p>}
+        </div>
 
         <p className="login-register">
           Немає акаунта?{' '}
