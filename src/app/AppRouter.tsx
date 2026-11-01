@@ -6,6 +6,7 @@ import RegisterPage from '../pages/RegisterPage'
 import ForgotPasswordPage from '../pages/ForgotPasswordPage'
 import AdminPage from '../pages/AdminPage'
 import CreateMoviePage from '../pages/CreateMoviePage'
+import RequireAdmin from '../features/auth/RequireAdmin'
 import { useSessionExpiry } from '../features/auth/useSessionExpiry'
 
 export default function AppRouter() {
@@ -24,17 +25,19 @@ export default function AppRouter() {
       <Route element={<MainLayout />}>
         <Route index element={<HomePage />} />
 
-        <Route path="admin" element={<AdminPage />} />
+        <Route element={<RequireAdmin />}>
+          <Route path="admin" element={<AdminPage />} />
 
-        <Route
-          path="admin/movies/new"
-          element={<CreateMoviePage />}
-        />
+          <Route
+            path="admin/movies/new"
+            element={<CreateMoviePage />}
+          />
 
-        <Route
-          path="admin/movies/:id/edit"
-          element={<CreateMoviePage />}
-        />
+          <Route
+            path="admin/movies/:id/edit"
+            element={<CreateMoviePage />}
+          />
+        </Route>
 
         <Route
           path="*"
