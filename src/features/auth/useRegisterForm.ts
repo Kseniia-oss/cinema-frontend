@@ -1,11 +1,18 @@
 import { useState } from 'react'
 import { useFormik } from 'formik'
+import { useNavigate } from 'react-router'
+import { useAppDispatch } from '../../app/hooks'
 import type { RegisterFormValues } from './auth.types'
 import { validateRegister } from './register.validation'
 import { registerUser } from './auth.api'
 import { getAuthErrorMessage } from './auth.errors'
+import { saveSession } from './auth.session'
+import { sessionStarted } from './authSlice'
 
 export function useRegisterForm() {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [notice, setNotice] = useState('')
@@ -23,21 +30,30 @@ export function useRegisterForm() {
 
     onSubmit: async (values, helpers) => {
       setNotice('')
+      let accountCreated = false
 
       try {
-        await registerUser({
+        const session = await registerUser({
           userName: values.name.trim(),
           email: values.email.trim(),
           password: values.password,
         })
 
+        accountCreated = true
+
+        saveSession(session)
+        dispatch(sessionStarted(session))
+
         helpers.resetForm()
+        navigate('/', { replace: true })
+      } catch (error: unknown) {
+        const message = getAuthErrorMessage(error)
 
         setNotice(
-          'Акаунт успішно створено на сервері. Можеш перейти на сторінку входу. Збереження сесії ще не підключене.',
+          accountCreated
+            ? `Акаунт створено, але автоматичний вхід не завершено. ${message} Перейди на сторінку входу.`
+            : message,
         )
-      } catch (error: unknown) {
-        setNotice(getAuthErrorMessage(error))
       }
     },
   })

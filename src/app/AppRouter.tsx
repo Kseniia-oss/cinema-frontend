@@ -6,12 +6,16 @@ import RegisterPage from '../pages/RegisterPage'
 import ForgotPasswordPage from '../pages/ForgotPasswordPage'
 import AdminPage from '../pages/AdminPage'
 import CreateMoviePage from '../pages/CreateMoviePage'
+import { useSessionExpiry } from '../features/auth/useSessionExpiry'
 
 export default function AppRouter() {
+  useSessionExpiry()
+
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+
       <Route
         path="/forgot-password"
         element={<ForgotPasswordPage />}
@@ -19,6 +23,7 @@ export default function AppRouter() {
 
       <Route element={<MainLayout />}>
         <Route index element={<HomePage />} />
+
         <Route path="admin" element={<AdminPage />} />
 
         <Route

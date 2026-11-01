@@ -1,11 +1,18 @@
 import { useState } from 'react'
 import { useFormik } from 'formik'
+import { useNavigate } from 'react-router'
+import { useAppDispatch } from '../../app/hooks'
 import type { LoginFormValues } from './auth.types'
 import { validateLogin } from './auth.validation'
 import { loginUser } from './auth.api'
 import { getAuthErrorMessage } from './auth.errors'
+import { saveSession } from './auth.session'
+import { sessionStarted } from './authSlice'
 
 export function useLoginForm() {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
   const [showPassword, setShowPassword] = useState(false)
   const [notice, setNotice] = useState('')
 
@@ -23,17 +30,17 @@ export function useLoginForm() {
       setNotice('')
 
       try {
-        const user = await loginUser({
+        const session = await loginUser({
           userName: values.userName.trim(),
           email: values.email.trim(),
           password: values.password,
         })
 
-        helpers.resetForm()
+        saveSession(session)
+        dispatch(sessionStarted(session))
 
-        setNotice(
-          `Сервер підтвердив вхід користувача ${user.userName}. Збереження сесії ще не підключене.`,
-        )
+        helpers.resetForm()
+        navigate('/', { replace: true })
       } catch (error: unknown) {
         setNotice(getAuthErrorMessage(error))
       }
