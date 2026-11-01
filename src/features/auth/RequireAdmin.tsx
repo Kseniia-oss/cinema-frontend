@@ -6,9 +6,7 @@ const ADMIN_ROLE = 'Admin'
 export default function RequireAdmin() {
   const session = useAppSelector((state) => state.auth.session)
 
-  const expiresAt = session ? Date.parse(session.expiration) : NaN
-
-  if (!session || !Number.isFinite(expiresAt) || expiresAt <= Date.now()) {
+  if (!session) {
     return <Navigate to="/login" replace />
   }
 

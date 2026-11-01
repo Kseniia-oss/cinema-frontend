@@ -1,7 +1,7 @@
-import type { Movie } from '../features/movies/movie.types'
+import type { ApiMovie } from '../features/movies/movies.api'
 
 interface MovieCardProps {
-  movie: Movie
+  movie: ApiMovie
 }
 
 export default function MovieCard({ movie }: MovieCardProps) {
@@ -25,20 +25,19 @@ export default function MovieCard({ movie }: MovieCardProps) {
 
       <div className="movie-card-content">
         <div className="movie-card-meta">
-          <span>{movie.year}</span>
-          <span aria-label={`Рейтинг ${movie.rating} із 10`}>
+          <span>
+            {movie.year > 0 ? movie.year : 'Рік не вказано'}
+          </span>
+
+          <span aria-label={`Рейтинг: ${movie.rating.toFixed(1)}`}>
             ★ {movie.rating.toFixed(1)}
           </span>
         </div>
 
-        <h3>{movie.title}</h3>
-
-        <p className="movie-card-details">
-          {movie.genre} · {movie.durationMinutes} хв
-        </p>
+        <h3>{movie.title.trim() || 'Без назви'}</h3>
 
         <p className="movie-card-description">
-          {movie.description}
+          {movie.description.trim() || 'Опис поки відсутній.'}
         </p>
       </div>
     </article>

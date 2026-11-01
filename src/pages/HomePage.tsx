@@ -7,11 +7,12 @@ export default function HomePage() {
   const {
     searchQuery,
     setSearchQuery,
-    selectedGenre,
-    setSelectedGenre,
-    genres,
     filteredMovies,
+    totalMovies,
+    isLoading,
+    error,
     resetFilters,
+    retryLoading,
   } = useHomeMovies()
 
   return (
@@ -27,7 +28,10 @@ export default function HomePage() {
           </p>
 
           <div className="home-hero-actions">
-            <a href="#home-movies" className="home-button home-button-dark">
+            <a
+              href="#home-movies"
+              className="home-button home-button-dark"
+            >
               Обрати фільм
             </a>
 
@@ -60,77 +64,90 @@ export default function HomePage() {
         id="home-movies"
         className="home-movies"
         aria-labelledby="movies-title"
+        aria-busy={isLoading}
       >
         <div className="home-section-heading">
           <div>
             <h2 id="movies-title">Обери, що подивитися</h2>
-            <p>Демонстраційна добірка — вигадані фільми та рейтинги.</p>
+            <p>Знайди фільм для свого вечора.</p>
           </div>
         </div>
 
-        <div className="home-filters">
-          <div className="home-filter-field">
-            <label htmlFor="movie-search">Пошук за назвою</label>
-
-            <input
-              id="movie-search"
-              type="search"
-              placeholder="Введіть назву фільму"
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-            />
+        {isLoading ? (
+          <div className="home-empty" role="status">
+            <p>Завантажуємо фільми…</p>
           </div>
-
-          <div className="home-filter-field">
-            <label htmlFor="movie-genre">Жанр</label>
-
-            <select
-              id="movie-genre"
-              value={selectedGenre}
-              onChange={(event) => setSelectedGenre(event.target.value)}
-            >
-              <option value="">Усі жанри</option>
-
-              {genres.map((genre) => (
-                <option key={genre} value={genre}>
-                  {genre}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <button
-            type="button"
-            className="home-button home-button-light"
-            onClick={resetFilters}
-          >
-            Скинути
-          </button>
-        </div>
-
-        <p className="home-results-count" role="status">
-          Знайдено: {filteredMovies.length}
-        </p>
-
-        {filteredMovies.length > 0 ? (
-          <div className="home-movie-grid">
-            {filteredMovies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} />
-            ))}
-          </div>
-        ) : (
+        ) : error ? (
           <div className="home-empty">
-            <h3>Нічого не знайдено</h3>
-            <p>Спробуйте іншу назву або змініть жанр.</p>
+            <h3>Не вдалося завантажити каталог</h3>
+            <p role="alert">{error}</p>
 
             <button
               type="button"
               className="home-button home-button-dark"
-              onClick={resetFilters}
+              onClick={retryLoading}
             >
-              Показати всі фільми
+              Спробувати ще раз
             </button>
           </div>
+        ) : totalMovies === 0 ? (
+          <div className="home-empty" role="status">
+            <h3>Каталог поки порожній</h3>
+            <p>Фільми з’являться тут після додавання.</p>
+          </div>
+        ) : (
+          <>
+            <div className="home-filters">
+              <div className="home-filter-field">
+                <label htmlFor="movie-search">
+                  Пошук за назвою
+                </label>
+
+                <input
+                  id="movie-search"
+                  type="search"
+                  placeholder="Введіть назву фільму"
+                  value={searchQuery}
+                  onChange={(event) =>
+                    setSearchQuery(event.target.value)
+                  }
+                />
+              </div>
+
+              <button
+                type="button"
+                className="home-button home-button-light"
+                onClick={resetFilters}
+              >
+                Скинути
+              </button>
+            </div>
+
+            <p className="home-results-count" role="status">
+              Знайдено: {filteredMovies.length}
+            </p>
+
+            {filteredMovies.length > 0 ? (
+              <div className="home-movie-grid">
+                {filteredMovies.map((movie) => (
+                  <MovieCard key={movie.id} movie={movie} />
+                ))}
+              </div>
+            ) : (
+              <div className="home-empty">
+                <h3>Нічого не знайдено</h3>
+                <p>Спробуй іншу назву або очисть пошук.</p>
+
+                <button
+                  type="button"
+                  className="home-button home-button-dark"
+                  onClick={resetFilters}
+                >
+                  Показати всі фільми
+                </button>
+              </div>
+            )}
+          </>
         )}
       </section>
     </div>
