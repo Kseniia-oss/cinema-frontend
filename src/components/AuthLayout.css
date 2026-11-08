@@ -1,0 +1,499 @@
+/* Сторінки входу за макетом Astera.
+   Спочатку стилі телефона (кадр 393 px), нижче — комп’ютера (кадр 1440 px). */
+
+.auth-screen {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: #fff;
+  font-family: var(--font-body);
+}
+
+.auth-logo {
+  display: none;
+}
+
+.auth-card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 393px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: clamp(48px, 19.6vh, 167px) 16px 47px;
+}
+
+.auth-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-title {
+  margin: 0 0 35px;
+  font: 700 20px/normal var(--font-display);
+  text-align: center;
+  color: #fff;
+}
+
+.auth-subtitle,
+.auth-message {
+  margin: -25px 0 30px;
+  font: 500 12px/1.4 var(--font-body);
+  text-align: center;
+  color: rgba(240, 240, 240, 0.6);
+}
+
+.auth-message {
+  margin: 0;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Поля */
+.auth-input {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 12px;
+  background: #f0f0f0;
+  border: 1px solid #e4e4e4;
+  border-radius: var(--radius);
+}
+
+.auth-input:focus-within {
+  outline: 2px solid #751577;
+  outline-offset: 2px;
+}
+
+.auth-input input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  outline: none;
+  font: 500 12px/normal var(--font-body);
+  color: #1e1e1e;
+}
+
+.auth-input input::placeholder {
+  color: #1e1e1e;
+  opacity: 1;
+}
+
+.auth-eye {
+  display: flex;
+  flex-shrink: 0;
+  margin-left: 10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #1e1e1e;
+  cursor: pointer;
+}
+
+.auth-eye svg {
+  width: 24px;
+  height: 24px;
+}
+
+.auth-hint {
+  margin: 5px 0 0;
+  font: 500 12px/normal var(--font-body);
+  color: rgba(255, 250, 245, 0.5);
+}
+
+.auth-error {
+  margin: 6px 0 0;
+  font: 500 12px/1.35 var(--font-body);
+  color: var(--color-error);
+}
+
+/* «Запам’ятати мене» і «Забули пароль?» */
+.auth-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  font: 500 12px/normal var(--font-body);
+  color: #fff;
+}
+
+.auth-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+}
+
+.auth-check input {
+  appearance: none;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  border: 1px solid #fff;
+  background: transparent center / 80% no-repeat;
+  cursor: pointer;
+}
+
+.auth-check input:checked {
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23282828' d='M13.293 3.293a1 1 0 1 1 1.414 1.414l-8 8a1 1 0 0 1-1.414 0l-4-4a1 1 0 1 1 1.414-1.414L6 10.586z'/%3E%3C/svg%3E");
+}
+
+.auth-check input:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.auth-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
+/* Кнопки */
+.auth-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius);
+  font: 500 12px/normal var(--font-display);
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: filter 0.15s ease, opacity 0.15s ease;
+}
+
+.auth-button:hover:not(:disabled) {
+  filter: brightness(1.15);
+}
+
+.auth-button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.auth-button:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.auth-button--primary {
+  margin-top: 11px;
+  background: var(--gradient-button-mobile);
+}
+
+.auth-button--light {
+  background: #f0f0f0;
+  color: #000;
+}
+
+.auth-button--glass {
+  background: var(--color-glass);
+  color: #f0f0f0;
+}
+
+/* Кнопка «Надіслати повторно», поки йде відлік */
+.auth-button--waiting,
+.auth-button--waiting:disabled {
+  background: var(--color-glass);
+  opacity: 1;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  font: 500 12px/normal var(--font-body);
+  color: rgba(240, 240, 240, 0.6);
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(240, 240, 240, 0.2);
+}
+
+.auth-divider span {
+  padding: 0 6px;
+}
+
+.auth-alternatives {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-notice {
+  margin: 14px 0 0;
+  font: 500 12px/1.4 var(--font-body);
+  text-align: center;
+  color: var(--color-cream);
+}
+
+.auth-timer {
+  margin: 15px 0 0;
+  font: 400 12px/normal var(--font-display);
+  text-align: center;
+  color: var(--color-cream);
+}
+
+/* Нижній рядок «Немає акаунта? Зареєструватися» — внизу екрана на телефоні */
+.auth-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  margin-top: auto;
+  padding: 34px 10px 10px;
+  font: 500 12px/normal var(--font-body);
+  color: #949494;
+}
+
+.auth-footer a {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-position: from-font;
+}
+
+/* Кружечок з іконкою (лист, галочка) */
+.auth-status-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 82px;
+  height: 82px;
+  margin: 0 auto 15px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background:
+    linear-gradient(#160f3d, #160f3d) padding-box,
+    var(--gradient-outline) border-box;
+  color: var(--color-cream);
+}
+
+.auth-status-icon--success {
+  width: 76px;
+  height: 76px;
+  background:
+    linear-gradient(#160f3d, #160f3d) padding-box,
+    linear-gradient(90deg, #3bff37, #319f43) border-box;
+}
+
+.auth-status-icon + .auth-title {
+  margin-bottom: 15px;
+}
+
+.auth-message + .auth-button,
+.auth-message + .auth-form {
+  margin-top: 30px;
+}
+
+.auth-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Комп’ютер ---------- */
+@media (min-width: 1024px) {
+  .auth-screen {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+
+  .auth-logo {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    padding-left: 11.67vw;
+  }
+
+  .auth-logo img {
+    width: min(344px, 100%);
+    height: auto;
+  }
+
+  .auth-card {
+    width: min(630px, calc(50vw - 30px));
+    max-width: none;
+    min-height: 0;
+    margin: 40px 0 40px 10px;
+    padding: 60px min(88px, 5vw);
+    background: var(--color-card);
+    border-radius: var(--radius);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+
+  .auth-title {
+    margin-bottom: 30px;
+    font-size: 24px;
+    color: var(--color-cream);
+  }
+
+  .auth-subtitle,
+  .auth-message {
+    margin: -15px 0 30px;
+    font: 400 14px/normal var(--font-display);
+    color: var(--color-cream-50);
+  }
+
+  .auth-message {
+    margin: 0;
+  }
+
+  .auth-form {
+    gap: 15px;
+  }
+
+  .auth-input {
+    height: 50px;
+    padding: 0 20px;
+    background: var(--color-cream);
+    border-color: var(--color-field-border);
+  }
+
+  .auth-input input {
+    font-size: 14px;
+    color: var(--color-ink);
+  }
+
+  .auth-input input::placeholder {
+    color: var(--color-ink-50);
+  }
+
+  .auth-eye {
+    color: var(--color-ink);
+  }
+
+  .auth-eye svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .auth-hint,
+  .auth-error {
+    font-size: 14px;
+  }
+
+  .auth-options {
+    margin-top: 0;
+    font-size: 14px;
+    color: var(--color-cream);
+  }
+
+  .auth-check {
+    gap: 10px;
+  }
+
+  .auth-check input {
+    width: 18px;
+    height: 18px;
+    border-color: var(--color-cream);
+    border-radius: 3px;
+  }
+
+  .auth-button {
+    height: 47px;
+    font: 400 14px/normal var(--font-display);
+  }
+
+  .auth-button--primary {
+    height: 48px;
+    margin-top: 15px;
+    font: 500 16px/normal var(--font-display);
+    background: var(--gradient-button);
+  }
+
+  .auth-button--waiting,
+  .auth-button--waiting:disabled {
+    height: 48px;
+    font: 500 16px/normal var(--font-display);
+  }
+
+  .auth-button--light {
+    background: var(--color-cream);
+    border: 1px solid var(--color-field-border);
+    color: var(--color-ink);
+  }
+
+  .auth-button--glass {
+    color: var(--color-cream);
+  }
+
+  .auth-divider {
+    margin: 30px 0;
+    font: 400 14px/normal var(--font-display);
+    color: var(--color-cream-50);
+  }
+
+  .auth-divider::before,
+  .auth-divider::after {
+    background: var(--color-cream-50);
+  }
+
+  .auth-divider span {
+    padding: 0 10px;
+  }
+
+  .auth-alternatives {
+    gap: 15px;
+  }
+
+  .auth-notice {
+    font-size: 14px;
+  }
+
+  .auth-timer {
+    font-size: 14px;
+  }
+
+  .auth-footer {
+    gap: 10px;
+    margin-top: 30px;
+    padding: 0;
+    font: 500 14px/normal var(--font-body);
+    color: var(--color-cream);
+  }
+
+  .auth-footer a {
+    font: 400 14px/normal var(--font-display);
+    color: var(--color-cream);
+  }
+
+  .auth-footer--compact {
+    margin-top: 15px;
+  }
+}

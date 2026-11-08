@@ -1,9 +1,12 @@
 import { useRef, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router'
 import axios from 'axios'
+import AuthLayout from '../components/AuthLayout'
+import { MailIcon } from '../components/Icons'
 import { confirmEmail } from '../features/auth/auth.api'
-import './LoginPage.css'
 
+// Окремого макета для цієї сторінки немає, тому вона зібрана
+// з тих самих елементів, що й «Перевірте свою пошту».
 export default function ConfirmEmailPage() {
   const [params] = useSearchParams()
   const navigate = useNavigate()
@@ -42,38 +45,47 @@ export default function ConfirmEmailPage() {
   }
 
   return (
-    <main className="login-screen">
-      <div className="login-panel">
-        <h1 className="login-title">Підтвердження пошти</h1>
-
-        {email && token ? (
-          <>
-            <p>Натисни кнопку, щоб підтвердити адресу {email}.</p>
-
-            <button
-              type="button"
-              className="login-button login-button-primary"
-              onClick={handleConfirm}
-              disabled={busy}
-            >
-              {busy ? 'Підтверджуємо…' : 'Підтвердити пошту'}
-            </button>
-          </>
-        ) : (
-          <p>
-            У посиланні бракує даних. Відкрий посилання з листа
-            для підтвердження пошти.
-          </p>
-        )}
-
-        {error && (
-          <p className="login-notice" role="alert">
-            {error}
-          </p>
-        )}
-
-        <Link to="/login">До входу</Link>
+    <AuthLayout
+      footer={
+        <>
+          <span>Маєте акаунт?</span>
+          <Link to="/login">Увійти</Link>
+        </>
+      }
+    >
+      <div className="auth-status-icon">
+        <MailIcon />
       </div>
-    </main>
+
+      <h1 className="auth-title">Підтвердження пошти</h1>
+
+      {email && token ? (
+        <>
+          <p className="auth-message">
+            Натисніть кнопку, щоб підтвердити адресу {email}.
+          </p>
+
+          <button
+            type="button"
+            className="auth-button auth-button--primary"
+            onClick={handleConfirm}
+            disabled={busy}
+          >
+            {busy ? 'Підтверджуємо…' : 'Підтвердити пошту'}
+          </button>
+        </>
+      ) : (
+        <p className="auth-message">
+          У посиланні бракує даних. Відкрийте посилання з листа для
+          підтвердження пошти.
+        </p>
+      )}
+
+      {error && (
+        <p className="auth-notice" role="alert">
+          {error}
+        </p>
+      )}
+    </AuthLayout>
   )
 }

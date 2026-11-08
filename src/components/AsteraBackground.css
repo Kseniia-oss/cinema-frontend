@@ -1,0 +1,15 @@
+/* Анімований фон рендерить WebGPU-шейдер. Градієнт під ним видно,
+   поки шейдер завантажується або якщо браузер не підтримує WebGPU. */
+.astera-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: linear-gradient(
+    142deg,
+    var(--background-1) 6%,
+    var(--background-2) 53%,
+    var(--background-3) 100%
+  );
+}

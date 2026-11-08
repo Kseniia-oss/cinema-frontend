@@ -1,0 +1,29 @@
+/* Кольори, шрифти й градієнти з макета Astera (Figma) */
+:root {
+  --font-display: 'Unbounded', 'Montserrat', sans-serif;
+  --font-body: 'Montserrat', sans-serif;
+
+  --color-cream: #fffaf5;
+  --color-cream-50: rgba(255, 250, 245, 0.5);
+  --color-ink: #282828;
+  --color-ink-50: rgba(40, 40, 40, 0.5);
+  --color-field-border: #250074;
+  --color-glass: rgba(255, 255, 255, 0.1);
+  --color-card: rgba(31, 19, 57, 0.5);
+  --color-error: #ff8a8a;
+
+  --gradient-button: linear-gradient(
+    90deg,
+    rgba(46, 10, 108, 0.62),
+    rgba(117, 21, 119, 0.62)
+  );
+  --gradient-button-mobile: linear-gradient(90deg, #5d015c, #0f0c48);
+  --gradient-outline: linear-gradient(90deg, #2e0a6c, #751577);
+
+  /* Кольори фону «Moving gradient», поки шейдер ще не завантажився */
+  --background-1: #0f001c;
+  --background-2: #100d45;
+  --background-3: #010015;
+
+  --radius: 12px;
+}
