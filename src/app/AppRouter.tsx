@@ -3,6 +3,7 @@ import MainLayout from '../layouts/MainLayout'
 import HomePage from '../pages/HomePage'
 import LoginPage from '../pages/LoginPage'
 import RegisterPage from '../pages/RegisterPage'
+import ConfirmEmailPage from '../pages/ConfirmEmailPage'
 import ForgotPasswordPage from '../pages/ForgotPasswordPage'
 import AdminPage from '../pages/AdminPage'
 import CreateMoviePage from '../pages/CreateMoviePage'
@@ -16,6 +17,7 @@ export default function AppRouter() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/confirm-email" element={<ConfirmEmailPage />} />
 
       <Route
         path="/forgot-password"

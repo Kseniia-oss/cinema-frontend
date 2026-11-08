@@ -4,7 +4,9 @@ import { isAuthResponse } from './auth.session'
 
 function parseAuthResponse(data: unknown): AuthResponse {
   if (!isAuthResponse(data)) {
-    throw new Error('Сервер повернув неочікуваний формат авторизації.')
+    throw new Error(
+      'Сервер повернув неочікуваний формат авторизації.',
+    )
   }
 
   return data
@@ -46,4 +48,13 @@ export async function logoutUser(
       },
     },
   )
+}
+
+export async function confirmEmail(
+  email: string,
+  token: string,
+): Promise<void> {
+  await apiClient.post('/api/Auth/ConfirmEmail', null, {
+    params: { email, token },
+  })
 }
