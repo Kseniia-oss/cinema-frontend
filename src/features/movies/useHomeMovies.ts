@@ -1,28 +1,6 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
-import { getMovies } from './movies.api'
-import type { ApiMovie } from './movies.api'
-
-function getCatalogError(error: unknown): string {
-  if (axios.isAxiosError(error)) {
-    if (
-      error.code === 'ECONNABORTED' ||
-      error.code === 'ETIMEDOUT'
-    ) {
-      return 'Сервер не відповів вчасно. Спробуй ще раз.'
-    }
-
-    if (!error.response) {
-      return 'Не вдалося завантажити каталог. Перевір з’єднання та спробуй ще раз.'
-    }
-
-    return `Не вдалося завантажити каталог. Код відповіді: ${error.response.status}.`
-  }
-
-  return error instanceof Error
-    ? error.message
-    : 'Сталася помилка під час завантаження каталогу.'
-}
+import { apiError } from '../../api/apiError'
+import { getMovies, type ApiMovie } from './movies.api'
 
 export function useHomeMovies() {
   const [movies, setMovies] = useState<ApiMovie[]>([])
@@ -42,14 +20,10 @@ export function useHomeMovies() {
           setMovies(data)
           setError('')
         }
-      } catch (requestError: unknown) {
-        if (active) {
-          setError(getCatalogError(requestError))
-        }
+      } catch (cause: unknown) {
+        if (active) setError(apiError(cause))
       } finally {
-        if (active) {
-          setIsLoading(false)
-        }
+        if (active) setIsLoading(false)
       }
     }
 
@@ -60,14 +34,10 @@ export function useHomeMovies() {
     }
   }, [requestNumber])
 
-  const normalizedQuery = searchQuery
-    .trim()
-    .toLocaleLowerCase('uk-UA')
+  const normalizedQuery = searchQuery.trim().toLocaleLowerCase('uk-UA')
 
   const filteredMovies = movies.filter((movie) =>
-    movie.title
-      .toLocaleLowerCase('uk-UA')
-      .includes(normalizedQuery),
+    movie.title.toLocaleLowerCase('uk-UA').includes(normalizedQuery),
   )
 
   function resetFilters() {

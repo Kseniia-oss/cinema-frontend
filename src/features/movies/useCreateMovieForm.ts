@@ -1,78 +1,59 @@
+import { useState } from 'react'
 import { useFormik } from 'formik'
 import { useNavigate, useParams } from 'react-router'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { movieAdded, movieUpdated } from './moviesSlice'
-import { validateMovieForm } from './movieForm.validation'
-import type { MovieFormValues } from './movieForm.validation'
+import { apiError } from '../../api/apiError'
+import { createMovie, updateMovie } from './movies.api'
+import {
+  validateMovieForm,
+  type MovieFormValues,
+} from './movieForm.validation'
+import { useMovie } from './useMovie'
 
 export function useCreateMovieForm() {
-  const dispatch = useAppDispatch()
+  const { id } = useParams()
   const navigate = useNavigate()
-  const { id } = useParams<{ id: string }>()
-
-  const movies = useAppSelector((state) => state.movies.items)
-
-  const isEditing = id !== undefined
-  const movie = movies.find((item) => item.id === Number(id))
-  const notFound = isEditing && !movie
+  const detail = useMovie(id)
+  const [submitError, setSubmitError] = useState('')
 
   const formik = useFormik<MovieFormValues>({
     initialValues: {
-      title: movie?.title ?? '',
-      year: movie?.year ?? '',
-      genre: movie?.genre ?? '',
-      durationMinutes: movie?.durationMinutes ?? '',
-      description: movie?.description ?? '',
+      title: detail.movie?.title ?? '',
+      description: detail.movie?.description ?? '',
+      year: detail.movie?.year || '',
     },
 
     enableReinitialize: true,
     validate: validateMovieForm,
 
-    onSubmit: (values, helpers) => {
-      if (notFound) {
-        helpers.setSubmitting(false)
-        return
-      }
+    onSubmit: async (values) => {
+      if (id && !detail.movie) return
 
-      const movieData = {
+      setSubmitError('')
+
+      const input = {
         title: values.title.trim(),
-        year: Number(values.year),
-        genre: values.genre.trim(),
-        durationMinutes: Number(values.durationMinutes),
         description: values.description.trim(),
+        year: Number(values.year),
       }
 
-      if (isEditing && movie) {
-        dispatch(
-          movieUpdated({
-            ...movie,
-            ...movieData,
-          }),
-        )
-      } else {
-        const nextId =
-          movies.reduce(
-            (maximum, item) => Math.max(maximum, item.id),
-            0,
-          ) + 1
+      try {
+        if (id) {
+          await updateMovie(id, input)
+        } else {
+          await createMovie(input)
+        }
 
-        dispatch(
-          movieAdded({
-            ...movieData,
-            id: nextId,
-            rating: 0,
-          }),
-        )
+        navigate('/admin', { replace: true })
+      } catch (cause: unknown) {
+        setSubmitError(apiError(cause))
       }
-
-      helpers.setSubmitting(false)
-      navigate('/admin')
     },
   })
 
   return {
     formik,
-    isEditing,
-    notFound,
+    isEditing: id !== undefined,
+    detail,
+    submitError,
   }
 }

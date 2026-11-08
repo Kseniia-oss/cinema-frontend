@@ -5,31 +5,24 @@ import './MainLayout.css'
 
 export default function MainLayout() {
   const session = useAppSelector((state) => state.auth.session)
-
-  const {
-    handleLogout,
-    isLoggingOut,
-    logoutNotice,
-  } = useLogout()
+  const { handleLogout, isLoggingOut, logoutNotice } = useLogout()
 
   return (
     <div className="app-layout">
       <header className="site-header">
         <div className="container header-content">
-          <NavLink to="/" className="logo">
-            Cinema
-          </NavLink>
+          <NavLink to="/" className="logo">Cinema</NavLink>
 
           <nav className="navigation" aria-label="Основна навігація">
-            <NavLink to="/" end>
-              Головна
-            </NavLink>
+            <NavLink to="/" end>Головна</NavLink>
 
             {session ? (
               <>
-                <span className="navigation-user">
-                  {session.userName}
-                </span>
+                {session.role === 'Admin' && (
+                  <NavLink to="/admin">Адмінпанель</NavLink>
+                )}
+
+                <span className="navigation-user">{session.userName}</span>
 
                 <button
                   type="button"
@@ -42,13 +35,8 @@ export default function MainLayout() {
               </>
             ) : (
               <>
-                <NavLink to="/login">
-                  Вхід
-                </NavLink>
-
-                <NavLink to="/register">
-                  Реєстрація
-                </NavLink>
+                <NavLink to="/login">Вхід</NavLink>
+                <NavLink to="/register">Реєстрація</NavLink>
               </>
             )}
           </nav>
@@ -57,20 +45,13 @@ export default function MainLayout() {
 
       <main className="container main-content">
         <div role="status" aria-live="polite">
-          {logoutNotice && (
-            <p className="session-notice">
-              {logoutNotice}
-            </p>
-          )}
+          {logoutNotice && <p className="session-notice">{logoutNotice}</p>}
         </div>
-
         <Outlet />
       </main>
 
       <footer className="site-footer">
-        <div className="container">
-          Cinema — дипломний проєкт
-        </div>
+        <div className="container">Cinema — дипломний проєкт</div>
       </footer>
     </div>
   )

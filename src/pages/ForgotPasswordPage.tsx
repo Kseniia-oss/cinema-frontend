@@ -6,10 +6,7 @@ import './ForgotPasswordPage.css'
 
 export default function ForgotPasswordPage() {
   const { formik, notice } = useForgotPasswordForm()
-
-  const emailError = formik.touched.email
-    ? formik.errors.email
-    : undefined
+  const emailError = formik.touched.email ? formik.errors.email : undefined
 
   return (
     <main className="login-screen">
@@ -34,7 +31,6 @@ export default function ForgotPasswordPage() {
               <path d="m14 6-6 6 6 6" />
             </svg>
           </Link>
-
           <h1 className="login-title">Відновлення пароля</h1>
         </div>
 
@@ -54,14 +50,11 @@ export default function ForgotPasswordPage() {
 
             <input
               id="email"
-              name="email"
               type="email"
               autoComplete="email"
               placeholder="Електронна пошта"
               required
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
+              {...formik.getFieldProps('email')}
               aria-invalid={Boolean(emailError)}
               aria-describedby={emailError ? 'email-error' : undefined}
             />
@@ -78,14 +71,14 @@ export default function ForgotPasswordPage() {
             className="login-button login-button-primary"
             disabled={formik.isSubmitting}
           >
-            Надіслати інструкцію
+            {formik.isSubmitting ? 'Надсилаємо…' : 'Надіслати інструкцію'}
           </button>
         </form>
 
+        <Link to="/reset-password">У мене вже є код із листа</Link>
+
         {notice && (
-          <p className="login-notice" role="status">
-            {notice}
-          </p>
+          <p className="login-notice" role="status">{notice}</p>
         )}
       </div>
     </main>

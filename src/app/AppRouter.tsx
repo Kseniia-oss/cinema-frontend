@@ -5,6 +5,8 @@ import LoginPage from '../pages/LoginPage'
 import RegisterPage from '../pages/RegisterPage'
 import ConfirmEmailPage from '../pages/ConfirmEmailPage'
 import ForgotPasswordPage from '../pages/ForgotPasswordPage'
+import ResetPasswordPage from '../pages/ResetPasswordPage'
+import MovieDetailsPage from '../pages/MovieDetailsPage'
 import AdminPage from '../pages/AdminPage'
 import CreateMoviePage from '../pages/CreateMoviePage'
 import RequireAdmin from '../features/auth/RequireAdmin'
@@ -18,27 +20,17 @@ export default function AppRouter() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/confirm-email" element={<ConfirmEmailPage />} />
-
-      <Route
-        path="/forgot-password"
-        element={<ForgotPasswordPage />}
-      />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
 
       <Route element={<MainLayout />}>
         <Route index element={<HomePage />} />
+        <Route path="movies/:id" element={<MovieDetailsPage />} />
 
         <Route element={<RequireAdmin />}>
           <Route path="admin" element={<AdminPage />} />
-
-          <Route
-            path="admin/movies/new"
-            element={<CreateMoviePage />}
-          />
-
-          <Route
-            path="admin/movies/:id/edit"
-            element={<CreateMoviePage />}
-          />
+          <Route path="admin/movies/new" element={<CreateMoviePage />} />
+          <Route path="admin/movies/:id/edit" element={<CreateMoviePage />} />
         </Route>
 
         <Route

@@ -1,3 +1,4 @@
+import { Link } from 'react-router'
 import type { ApiMovie } from '../features/movies/movies.api'
 
 interface MovieCardProps {
@@ -19,22 +20,22 @@ export default function MovieCard({ movie }: MovieCardProps) {
           <rect x="3" y="3" width="18" height="18" rx="3" />
           <path d="M7 3v18M17 3v18M3 8h4M3 16h4M17 8h4M17 16h4" />
         </svg>
-
         <span>Постер</span>
       </div>
 
       <div className="movie-card-content">
         <div className="movie-card-meta">
-          <span>
-            {movie.year > 0 ? movie.year : 'Рік не вказано'}
-          </span>
-
-          <span aria-label={`Рейтинг: ${movie.rating.toFixed(1)}`}>
-            ★ {movie.rating.toFixed(1)}
+          <span>{movie.year > 0 ? movie.year : 'Рік не вказано'}</span>
+          <span aria-label={`Рейтинг: ${movie.rating?.toFixed(1) ?? 'не вказано'}`}>
+            ★ {movie.rating?.toFixed(1) ?? '—'}
           </span>
         </div>
 
-        <h3>{movie.title.trim() || 'Без назви'}</h3>
+        <h3>
+          <Link to={`/movies/${encodeURIComponent(movie.id)}`}>
+            {movie.title.trim() || 'Без назви'}
+          </Link>
+        </h3>
 
         <p className="movie-card-description">
           {movie.description.trim() || 'Опис поки відсутній.'}
