@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from 'react-router'
 import { useAppSelector } from '../app/hooks'
 import { useLogout } from '../features/auth/useLogout'
+import { hasRole, ROLE_CONTENT_MANAGER } from '../features/auth/roles'
 import './MainLayout.css'
 
 export default function MainLayout() {
@@ -18,7 +19,7 @@ export default function MainLayout() {
 
             {session ? (
               <>
-                {session.role === 'Admin' && (
+                {hasRole(session, ROLE_CONTENT_MANAGER) && (
                   <NavLink to="/admin">Адмінпанель</NavLink>
                 )}
 

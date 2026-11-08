@@ -9,7 +9,8 @@ import ResetPasswordPage from '../pages/ResetPasswordPage'
 import MovieDetailsPage from '../pages/MovieDetailsPage'
 import AdminPage from '../pages/AdminPage'
 import CreateMoviePage from '../pages/CreateMoviePage'
-import RequireAdmin from '../features/auth/RequireAdmin'
+import RequireRole from '../features/auth/RequireRole'
+import { ROLE_CONTENT_MANAGER } from '../features/auth/roles'
 import { useSessionExpiry } from '../features/auth/useSessionExpiry'
 
 export default function AppRouter() {
@@ -27,7 +28,14 @@ export default function AppRouter() {
         <Route index element={<HomePage />} />
         <Route path="movies/:id" element={<MovieDetailsPage />} />
 
-        <Route element={<RequireAdmin />}>
+        <Route
+          element={
+            <RequireRole
+              role={ROLE_CONTENT_MANAGER}
+              message="Керувати фільмами може лише контент-менеджер."
+            />
+          }
+        >
           <Route path="admin" element={<AdminPage />} />
           <Route path="admin/movies/new" element={<CreateMoviePage />} />
           <Route path="admin/movies/:id/edit" element={<CreateMoviePage />} />

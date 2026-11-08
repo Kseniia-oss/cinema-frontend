@@ -1,20 +1,24 @@
 import { Link, Navigate, Outlet } from 'react-router'
 import { useAppSelector } from '../../app/hooks'
+import { hasRole } from './roles'
 
-const ADMIN_ROLE = 'Admin'
+interface RequireRoleProps {
+  role: string
+  message: string
+}
 
-export default function RequireAdmin() {
+export default function RequireRole({ role, message }: RequireRoleProps) {
   const session = useAppSelector((state) => state.auth.session)
 
   if (!session) {
     return <Navigate to="/login" replace />
   }
 
-  if (session.role !== ADMIN_ROLE) {
+  if (!hasRole(session, role)) {
     return (
       <section className="page">
         <h1>403 — Недостатньо прав</h1>
-        <p>Ця сторінка доступна лише адміністратору.</p>
+        <p>{message}</p>
         <Link to="/">Повернутися на головну</Link>
       </section>
     )
