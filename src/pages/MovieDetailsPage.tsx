@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router'
+import MovieVideoPlayer from '../features/movies/MovieVideoPlayer'
 import { useMovie } from '../features/movies/useMovie'
 import './HomePage.css'
 
@@ -25,14 +26,18 @@ export default function MovieDetailsPage() {
         <article className="home-hero-content">
           <p className="home-eyebrow">Про фільм</p>
           <h1>{movie.title || 'Без назви'}</h1>
+
           <p>
             {movie.year || 'Рік не вказано'}
             {' · '}
             Рейтинг: {movie.rating?.toFixed(1) ?? '—'}
           </p>
+
           <p className="home-hero-description">
             {movie.description || 'Опис поки відсутній.'}
           </p>
+
+          <MovieVideoPlayer key={movie.id} movieId={String(movie.id)} />
         </article>
       )}
     </section>
