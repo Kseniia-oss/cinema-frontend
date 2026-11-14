@@ -18,22 +18,15 @@ apiClient.interceptors.request.use((config) => {
     )
   }
 
-  const target = new URL(
-    apiClient.getUri(config),
-    window.location.origin,
-  )
-
-  const apiOrigin = new URL(
-    apiBaseUrl,
-    window.location.origin,
-  ).origin
+  const target = new URL(apiClient.getUri(config), window.location.origin)
+  const apiOrigin = new URL(apiBaseUrl, window.location.origin).origin
 
   if (target.origin !== apiOrigin) {
     throw new Error('Адреса запиту не належить Backend API.')
   }
 
   const isPublicAuth =
-    /^\/api\/Auth\/(?:login|register|confirmemail|forgotpassword|resetpassword|refresh)\/?$/i.test(
+    /^\/api\/auth\/(?:login|register|providerauth|confirmemail|forgotpassword|resetpassword|refresh)\/?$/i.test(
       target.pathname,
     )
 
@@ -41,10 +34,7 @@ apiClient.interceptors.request.use((config) => {
     const session = readSession()
 
     if (session) {
-      config.headers.set(
-        'Authorization',
-        `Bearer ${session.accessToken}`,
-      )
+      config.headers.set('Authorization', `Bearer ${session.accessToken}`)
     }
   }
 

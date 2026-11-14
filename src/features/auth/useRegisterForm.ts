@@ -4,11 +4,13 @@ import type { RegisterFormValues } from './auth.types'
 import { validateRegister } from './register.validation'
 import { registerUser } from './auth.api'
 import { getAuthErrorMessage } from './auth.errors'
+import { useGoogleAuth } from './useGoogleAuth'
 
 export function useRegisterForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [notice, setNotice] = useState('')
+  const startGoogleAuth = useGoogleAuth(setNotice)
 
   const formik = useFormik<RegisterFormValues>({
     initialValues: {
@@ -53,7 +55,12 @@ export function useRegisterForm() {
   }
 
   function handleGoogleRegister() {
-    setNotice('Створення акаунта через Google ще не підключене.')
+    if (!formik.values.acceptTerms) {
+      setNotice('Щоб продовжити, прийми умови користування.')
+      return
+    }
+
+    startGoogleAuth()
   }
 
   return {

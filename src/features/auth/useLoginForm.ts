@@ -8,6 +8,7 @@ import { loginUser } from './auth.api'
 import { getAuthErrorMessage } from './auth.errors'
 import { saveSession } from './auth.session'
 import { sessionStarted } from './authSlice'
+import { useGoogleAuth } from './useGoogleAuth'
 
 export function useLoginForm() {
   const dispatch = useAppDispatch()
@@ -15,6 +16,7 @@ export function useLoginForm() {
 
   const [showPassword, setShowPassword] = useState(false)
   const [notice, setNotice] = useState('')
+  const handleGoogleLogin = useGoogleAuth(setNotice)
 
   const formik = useFormik<LoginFormValues>({
     initialValues: {
@@ -48,11 +50,7 @@ export function useLoginForm() {
   })
 
   function togglePasswordVisibility() {
-    setShowPassword((previousValue) => !previousValue)
-  }
-
-  function handleGoogleLogin() {
-    setNotice('Вхід через Google ще не підключений.')
+    setShowPassword((visible) => !visible)
   }
 
   return {
