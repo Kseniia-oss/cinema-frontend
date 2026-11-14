@@ -1,18 +1,11 @@
 import { useState } from 'react'
 import { useFormik } from 'formik'
-import { useNavigate } from 'react-router'
-import { useAppDispatch } from '../../app/hooks'
 import type { RegisterFormValues } from './auth.types'
 import { validateRegister } from './register.validation'
 import { registerUser } from './auth.api'
 import { getAuthErrorMessage } from './auth.errors'
-import { saveSession } from './auth.session'
-import { sessionStarted } from './authSlice'
 
 export function useRegisterForm() {
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [notice, setNotice] = useState('')
@@ -30,40 +23,33 @@ export function useRegisterForm() {
 
     onSubmit: async (values, helpers) => {
       setNotice('')
-      let accountCreated = false
+      const email = values.email.trim()
 
       try {
-        const session = await registerUser({
+        await registerUser({
           userName: values.name.trim(),
-          email: values.email.trim(),
+          email,
           password: values.password,
         })
 
-        accountCreated = true
-
-        saveSession(session)
-        dispatch(sessionStarted(session))
-
         helpers.resetForm()
-        navigate('/', { replace: true })
-      } catch (error: unknown) {
-        const message = getAuthErrorMessage(error)
-
+        setShowPassword(false)
+        setShowConfirmPassword(false)
         setNotice(
-          accountCreated
-            ? `Акаунт створено, але автоматичний вхід не завершено. ${message} Перейди на сторінку входу.`
-            : message,
+          `Акаунт створено. Перевір пошту ${email} і підтвердь адресу за посиланням із листа.`,
         )
+      } catch (error: unknown) {
+        setNotice(getAuthErrorMessage(error))
       }
     },
   })
 
   function togglePasswordVisibility() {
-    setShowPassword((previousValue) => !previousValue)
+    setShowPassword((visible) => !visible)
   }
 
   function toggleConfirmPasswordVisibility() {
-    setShowConfirmPassword((previousValue) => !previousValue)
+    setShowConfirmPassword((visible) => !visible)
   }
 
   function handleGoogleRegister() {

@@ -1,4 +1,5 @@
-import { Link } from 'react-router'
+import { Link, useParams } from 'react-router'
+import MoviePosterUpload from '../features/movies/MoviePosterUpload'
 import { useCreateMovieForm } from '../features/movies/useCreateMovieForm'
 import './AdminPage.css'
 import './MovieForm.css'
@@ -9,6 +10,7 @@ const fields = [
 ] as const
 
 export default function CreateMoviePage() {
+  const { id: movieId } = useParams<{ id: string }>()
   const { formik, isEditing, detail, submitError } = useCreateMovieForm()
 
   if (detail.loading) {
@@ -22,7 +24,9 @@ export default function CreateMoviePage() {
         <button type="button" onClick={detail.retry}>
           Спробувати ще раз
         </button>
-        <Link to="/admin" className="admin-back">До адмінпанелі</Link>
+        <Link to="/admin" className="admin-back">
+          До адмінпанелі
+        </Link>
       </section>
     )
   }
@@ -35,11 +39,15 @@ export default function CreateMoviePage() {
           <h1>{isEditing ? 'Редагувати фільм' : 'Додати фільм'}</h1>
         </div>
 
-        <Link to="/admin" className="admin-back">До адмінпанелі</Link>
+        <Link to="/admin" className="admin-back">
+          До адмінпанелі
+        </Link>
       </header>
 
       {submitError && (
-        <p className="admin-notice" role="alert">{submitError}</p>
+        <p className="admin-notice" role="alert">
+          {submitError}
+        </p>
       )}
 
       <form className="movie-form" onSubmit={formik.handleSubmit} noValidate>
@@ -92,9 +100,15 @@ export default function CreateMoviePage() {
               : isEditing ? 'Зберегти зміни' : 'Додати фільм'}
           </button>
 
-          <Link to="/admin" className="admin-back">Скасувати</Link>
+          <Link to="/admin" className="admin-back">
+            Скасувати
+          </Link>
         </div>
       </form>
+
+      {isEditing && movieId && (
+        <MoviePosterUpload key={movieId} movieId={movieId} />
+      )}
     </div>
   )
 }
