@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router'
-import { apiClient } from '../../api/apiClient'
 import { useAppDispatch } from '../../app/hooks'
+import { loginWithGoogle } from './auth.api'
 import { getAuthErrorMessage } from './auth.errors'
-import { isAuthResponse, saveSession } from './auth.session'
+import { saveSession } from './auth.session'
 import { sessionStarted } from './authSlice'
 
 const CLIENT_ID =
@@ -22,7 +22,8 @@ export default function GoogleAuthButton() {
 
     let active = true
     let pending = false
-    let rendered = false
+    let initialized = false
+    let lastWidth = 0
 
     async function finishLogin(result: google.accounts.id.CredentialResponse) {
       if (!active || pending) return
@@ -36,30 +37,19 @@ export default function GoogleAuthButton() {
       setNotice('Входимо на сайт…')
 
       try {
-        const { data } = await apiClient.post<unknown>(
-          '/api/Auth/ProviderAuth',
-          {
-            providerType: 0,
-            providerToken: result.credential,
-          },
-        )
+        const session = await loginWithGoogle(result.credential)
 
         if (!active) return
 
-        if (!isAuthResponse(data)) {
-          setNotice('Сервер відповів, але сайт не розпізнав формат сесії.')
-          return
-        }
-
-        saveSession(data)
-        dispatch(sessionStarted(data))
+        saveSession(session)
+        dispatch(sessionStarted(session))
         navigate('/', { replace: true })
       } catch (error: unknown) {
         if (!active) return
 
         setNotice(
           axios.isAxiosError(error) && error.response?.status === 401
-            ? 'Сервер не прийняв ID-токен Google.'
+            ? 'Сервер не прийняв ID-токен Google. Спробуй увійти ще раз.'
             : getAuthErrorMessage(error),
         )
       } finally {
@@ -68,44 +58,61 @@ export default function GoogleAuthButton() {
     }
 
     function renderButton() {
-      if (!active || rendered || !element) return
+      if (!active || !element) return
       if (typeof google === 'undefined' || !google.accounts?.id) return
 
-      rendered = true
-      google.accounts.id.initialize({
-        client_id: CLIENT_ID,
-        callback: finishLogin,
-        ux_mode: 'popup',
-        auto_select: false,
-      })
+      const width = Math.min(400, element.clientWidth)
+      if (width <= 0 || width === lastWidth) return
+
+      if (!initialized) {
+        google.accounts.id.initialize({
+          client_id: CLIENT_ID,
+          callback: finishLogin,
+          ux_mode: 'popup',
+          auto_select: false,
+        })
+
+        initialized = true
+        setNotice('')
+      }
+
+      lastWidth = width
+      element.replaceChildren()
 
       google.accounts.id.renderButton(element, {
         type: 'standard',
         theme: 'outline',
-        size: 'large',
+        size: 'medium',
         text: 'signin_with',
+        shape: 'rectangular',
+        locale: 'uk',
+        width,
       })
     }
 
-    // Скрипт у index.html завантажується асинхронно.
+    function onLoadError() {
+      if (active && !initialized) {
+        setNotice('Не вдалося завантажити кнопку Google. Онови сторінку.')
+      }
+    }
+
     const script = document.querySelector<HTMLScriptElement>(
       'script[src="https://accounts.google.com/gsi/client"]',
     )
-    function onLoadError() {
-      if (active) setNotice('Не вдалося завантажити Google. Онови сторінку.')
-    }
 
     script?.addEventListener('load', renderButton)
     script?.addEventListener('error', onLoadError)
+
+    const observer = new ResizeObserver(renderButton)
+    observer.observe(element)
     renderButton()
 
-    const timeout = window.setTimeout(() => {
-      if (!rendered) onLoadError()
-    }, 15000)
+    const timer = window.setTimeout(onLoadError, 15000)
 
     return () => {
       active = false
-      window.clearTimeout(timeout)
+      window.clearTimeout(timer)
+      observer.disconnect()
       script?.removeEventListener('load', renderButton)
       script?.removeEventListener('error', onLoadError)
       element.replaceChildren()
@@ -113,9 +120,24 @@ export default function GoogleAuthButton() {
   }, [dispatch, navigate])
 
   return (
-    <div>
-      <div ref={container} />
-      {notice && <p className="auth-notice" role="status">{notice}</p>}
+    <div style={{ width: '100%', minWidth: 0 }}>
+      <div
+        ref={container}
+        style={{
+          width: '100%',
+          maxWidth: 400,
+          minHeight: 44,
+          marginInline: 'auto',
+          display: 'grid',
+          alignItems: 'center',
+        }}
+      />
+
+      {notice && (
+        <p className="auth-notice" role="status">
+          {notice}
+        </p>
+      )}
     </div>
   )
 }
