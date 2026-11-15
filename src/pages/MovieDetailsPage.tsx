@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router'
+import MovieTrailers from '../features/movies/MovieTrailers'
 import MovieVideoPlayer from '../features/movies/MovieVideoPlayer'
 import { useMovie } from '../features/movies/useMovie'
 import './HomePage.css'
@@ -38,6 +39,7 @@ export default function MovieDetailsPage() {
           </p>
 
           <MovieVideoPlayer key={movie.id} movieId={String(movie.id)} />
+          <MovieTrailers movieId={String(movie.id)} />
         </article>
       )}
     </section>

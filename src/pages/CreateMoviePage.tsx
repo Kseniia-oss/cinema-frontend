@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router'
 import MoviePosterUpload from '../features/movies/MoviePosterUpload'
+import MovieTrailers from '../features/movies/MovieTrailers'
 import MovieVideoUpload from '../features/movies/MovieVideoUpload'
 import { useCreateMovieForm } from '../features/movies/useCreateMovieForm'
 import './AdminPage.css'
@@ -111,6 +112,7 @@ export default function CreateMoviePage() {
         <>
           <MoviePosterUpload key={`poster-${movieId}`} movieId={movieId} />
           <MovieVideoUpload key={`video-${movieId}`} movieId={movieId} />
+          <MovieTrailers movieId={movieId} editable />
         </>
       )}
     </div>
