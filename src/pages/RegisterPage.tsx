@@ -2,7 +2,7 @@ import { Link } from 'react-router'
 import AuthLayout from '../components/AuthLayout'
 import AuthField from '../components/AuthField'
 import PasswordField from '../components/PasswordField'
-import GoogleIcon from '../components/GoogleIcon'
+import GoogleAuthButton from '../features/auth/GoogleAuthButton'
 import { useRegisterForm } from '../features/auth/useRegisterForm'
 
 type Field = 'name' | 'email' | 'password' | 'confirmPassword' | 'acceptTerms'
@@ -14,7 +14,6 @@ export default function RegisterPage() {
     showConfirmPassword,
     togglePasswordVisibility,
     toggleConfirmPasswordVisibility,
-    handleGoogleRegister,
     notice,
   } = useRegisterForm()
 
@@ -64,6 +63,7 @@ export default function RegisterPage() {
         <PasswordField
           name="password"
           placeholder="Пароль"
+          autoComplete="new-password"
           value={formik.values.password}
           visible={showPassword}
           error={error('password')}
@@ -75,6 +75,7 @@ export default function RegisterPage() {
         <PasswordField
           name="confirmPassword"
           placeholder="Повторіть пароль"
+          autoComplete="new-password"
           value={formik.values.confirmPassword}
           visible={showConfirmPassword}
           error={error('confirmPassword')}
@@ -114,22 +115,22 @@ export default function RegisterPage() {
         </button>
       </form>
 
+      <div role="status" aria-live="polite" aria-atomic="true">
+        {notice && <p className="auth-notice">{notice}</p>}
+      </div>
+
       <div className="auth-divider">
         <span>Або</span>
       </div>
 
-      <button
-        type="button"
-        className="auth-button auth-button--light"
-        onClick={handleGoogleRegister}
-        disabled={formik.isSubmitting}
-      >
-        <GoogleIcon />
-        <span>Увійти через Google</span>
-      </button>
-
-      <div role="status" aria-live="polite" aria-atomic="true">
-        {notice && <p className="auth-notice">{notice}</p>}
+      <div className="auth-alternatives">
+        {formik.values.acceptTerms ? (
+          !formik.isSubmitting && <GoogleAuthButton />
+        ) : (
+          <p className="auth-notice">
+            Щоб зареєструватися через Google, прийми умови користування.
+          </p>
+        )}
       </div>
     </AuthLayout>
   )

@@ -2,7 +2,7 @@ import { Link } from 'react-router'
 import AuthLayout from '../components/AuthLayout'
 import AuthField from '../components/AuthField'
 import PasswordField from '../components/PasswordField'
-import GoogleIcon from '../components/GoogleIcon'
+import GoogleAuthButton from '../features/auth/GoogleAuthButton'
 import { useLoginForm } from '../features/auth/useLoginForm'
 
 export default function LoginPage() {
@@ -10,7 +10,6 @@ export default function LoginPage() {
     formik,
     showPassword,
     togglePasswordVisibility,
-    handleGoogleLogin,
     notice,
   } = useLoginForm()
 
@@ -35,7 +34,6 @@ export default function LoginPage() {
         aria-busy={formik.isSubmitting}
         noValidate
       >
-        {/* Бекенд для входу вимагає ще й ім’я користувача, тому поле залишаємо */}
         <AuthField
           name="userName"
           placeholder="Ім’я користувача"
@@ -94,28 +92,20 @@ export default function LoginPage() {
         </button>
       </form>
 
+      <div role="status" aria-live="polite" aria-atomic="true">
+        {notice && <p className="auth-notice">{notice}</p>}
+      </div>
+
       <div className="auth-divider">
         <span>Або</span>
       </div>
 
       <div className="auth-alternatives">
-        <button
-          type="button"
-          className="auth-button auth-button--light"
-          onClick={handleGoogleLogin}
-          disabled={formik.isSubmitting}
-        >
-          <GoogleIcon />
-          <span>Увійти через Google</span>
-        </button>
+        {!formik.isSubmitting && <GoogleAuthButton />}
 
         <Link to="/" className="auth-button auth-button--glass">
           Увійти як гість
         </Link>
-      </div>
-
-      <div role="status" aria-live="polite" aria-atomic="true">
-        {notice && <p className="auth-notice">{notice}</p>}
       </div>
     </AuthLayout>
   )
